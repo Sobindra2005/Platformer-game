@@ -13,10 +13,14 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.tinefromLastturn = null
         this.rayGraphics = this.scene.add.graphics({ lineStyle: { width: 2, color: 0xaa00aa } })
         this.platformColliderLayer = null;
-
+        this.health = 100;
     }
 
     init() {
+        if (!this.body) {
+            return;
+        }
+
         BirdAnims(this.scene.anims);
         snakeAnims(this.scene.anims)
         this.body.setGravityY(1200);
@@ -33,6 +37,14 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(time, delta) {
+
+        if (this.getBounds().bottom > this.scene.cameras.main.height) {
+            this.scene.events.removeListener(Phaser.Scenes.Events.UPDATE, this.update, this);
+            this.setActive(false);
+            this.rayGraphics.clear();
+            this.destroy();
+            return;
+        }
         this.patroling(time);
     }
 
@@ -40,9 +52,10 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         if (!this.body || !this.body.onFloor()) {
             return;
         }
+
         const { ray, hasHit } = this.raycast(this.body, this.platformColliderLayer, 45, 3);
 
-        if (!hasHit && this.tinefromLastturn + 100 < time ) {
+        if (this.body | !hasHit && this.tinefromLastturn + 100 < time) {
             this.setFlipX(!this.flipX);
             this.speed = -this.speed;
             this.setVelocityX(this.speed);
@@ -58,13 +71,34 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.rayGraphics.clear();
 
         if (ray) {
-            this.rayGraphics.strokeLineShape(ray).setAlpha(1);
+            this.rayGraphics.strokeLineShape(ray).setAlpha(0);
         }
     }
 
     createPlatformCollider(platformCollider) {
         this.platformColliderLayer = platformCollider
     }
+
+    takesHit(source) {
+        this.health -= 20;
+        source.deliversHit(this);
+        const currentEnemy = this.texture.key;
+        this.anims.play(`${currentEnemy}-hurt`);
+        this.once('animationcomplete', (animation) => {
+            if (animation.key == `${currentEnemy}-hurt`) {
+                this.anims.play(`${currentEnemy}-idle`)
+            }
+        },
+            this
+        )
+        if (this.health <= 0) {
+            this.setVelocityY(-300)
+            this.setTint(0xff0000);
+            this.body.checkCollision.none = true;
+            this.setCollideWorldBounds(false);
+        }
+    }
+
 
 }
 

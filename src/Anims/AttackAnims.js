@@ -46,4 +46,6 @@ export default AttackAnims => {
         frames: AttackAnims.generateFrameNumbers('throwAttack', { start: 1, end: 6 }),
         frameRate: 24,
     });
+
+    
 }

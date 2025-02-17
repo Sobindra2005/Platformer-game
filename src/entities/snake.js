@@ -11,8 +11,9 @@ class Snake extends Enemy {
     initSnake() {
         this.setSize(14, 60); 
         this.setOffset(11, 2);
-        this.anims.play('snake-idle')
+        this.anims.play('Enemy-1-idle')
     }
+
 
  
 }

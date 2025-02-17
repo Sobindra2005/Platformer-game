@@ -1,7 +1,7 @@
 import { Scene } from 'phaser';
 import Player from '../entities/player';
 import Enemies from '../group/enemies';
-
+import hitanims from '../Anims/hitanims';
 export class Game extends Scene {
     constructor(config) {
         super('Game');
@@ -16,6 +16,7 @@ export class Game extends Scene {
     create() {
         this.Environment();
         this.setupFollowupCameraOn();
+        hitanims(this.anims)
     }
 
     update() {
@@ -66,12 +67,24 @@ export class Game extends Scene {
     }
 
     PlayerCollider(player, { CollisionObjects }) {
+
         player.addCollider(CollisionObjects.platform)
     }
 
+    onWeaponHit(entity, source) {
+        entity.takesHit(source);
+    }
+
     EnemyCollider(player, { CollisionObjects }) {
-        player.addCollider(CollisionObjects.platform)
-        player.addCollider(CollisionObjects.player, this.playerEnemyCollide)
+        player.addCollider(CollisionObjects.platform);
+        if (CollisionObjects.player) {
+            player.addCollider(CollisionObjects.player, this.playerEnemyCollide);
+        }
+
+        if (CollisionObjects.player && CollisionObjects.player.projectiles) {
+
+            player.addCollider(CollisionObjects.player.projectiles, this.onWeaponHit);
+        }
     }
 
     CreateMap() {
@@ -82,8 +95,8 @@ export class Game extends Scene {
     }
 
     playerEnemyCollide() {
-      this.player.TakeHit()
-      
+        this.player.TakeHit()
+
     }
 
     CreateLayer(map) {

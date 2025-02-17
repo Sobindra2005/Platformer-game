@@ -1,6 +1,6 @@
 export default BirdAnims => {
     BirdAnims.create({
-        key: 'bird-idle',
+        key: 'Enemy-2-idle',
         frames: BirdAnims.generateFrameNumbers('Enemy-2', { start: 0, end: 10 }),
         frameRate: 8,
         repeat: -1
@@ -12,7 +12,7 @@ export default BirdAnims => {
     })
 
     BirdAnims.create({
-        key: 'bird-defeat',
+        key: 'Enemy-2-hurt',
         frames: BirdAnims.generateFrameNumbers('Enemy-2', { start: 25, end: 27 }),
         frameRate: 15,
     })

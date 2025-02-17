@@ -1,9 +1,9 @@
 import Phaser from "phaser";
 import collidable from "../mixins/collidable";
 import initAnims from '../Anims/playerAnims'
-import Fireball from "../attacks/fireBall";
-import Snowball from "../attacks/snowball";
+import Projectiles from "../attacks/projectiles";
 import AttackAnims from "../Anims/AttackAnims";
+import Projectile from "../attacks/Projectile";
 
 class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture) {
@@ -17,8 +17,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.lastShiftPressTime = 0;
         this.isBounceVelocity = 100;
         this.isEnemyColliding = false;
-        this.isFireball = null;
-        this.isSnowball = null;
         this.Attackvelocity = 200;
         this.isThrowingBall = false
     }
@@ -28,6 +26,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.body.setGravityY(1200);
         this.setCollideWorldBounds(true)
         this.cursor = this.scene.input.keyboard.createCursorKeys();
+        this.projectiles = new Projectiles(this.scene, 'fireball')
         this.initEvents();
         Object.assign(this, collidable)
     }
@@ -36,6 +35,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this)
     }
     update() {
+
         this.BodySizeManage();
         if (this.isEnemyColliding) {
             return;
@@ -66,28 +66,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.AnimationController();
     }
 
-    CreateSnowBall() {
-        this.isThrowingBall = true
+    projectile(texture) {
+        if (this.isThrowingBall) return;
+        this.isThrowingBall = true;
         this.once('animationcomplete', () => {
-            this.isSnowball = new Snowball(this.scene, this.flipX ? this.x - this.width / 2 : this.x + this.width / 2, this.y)
-            this.isSnowball.setDirection(this.flipX ? -this.Attackvelocity : this.Attackvelocity)
-            this.flipX ? this.isSnowball.setFlipX(true) : this.isSnowball.setFlipX(false)
-            this.isThrowingBall = false
-
+            const velocity = this.flipX ? -this.Attackvelocity : this.Attackvelocity
+            this.projectiles.FireProjectile(this, velocity, texture)
+            this.isThrowingBall = false;
         })
-
     }
 
-    CreateFireBall() {
-        this.isThrowingBall = true
-        this.once('animationcomplete', () => {
-            this.isFireball = new Fireball(this.scene, this.flipX ? this.x - this.width / 2 : this.x + this.width / 2, this.y)
-            this.isFireball.setDirection(this.flipX ? -this.Attackvelocity : this.Attackvelocity)
-            this.flipX ? this.isFireball.setFlipX(true) : this.isFireball.setFlipX(false)
-            this.isThrowingBall = false
-        })
-
-    }
 
     EventListener() {
         const { left, right, space, shift, A, D, Q, E } = this.cursor;
@@ -100,10 +88,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         const currentTime = this.scene.time.now;
 
         if (Phaser.Input.Keyboard.JustDown(this.Q)) {
-            this.CreateFireBall()
+            this.projectile('fireball')
         }
         else if (Phaser.Input.Keyboard.JustDown(this.E)) {
-            this.CreateSnowBall()
+            this.projectile('snowball')
         }
 
         if (shift.isDown && this.body.onFloor() && (currentTime - this.lastShiftPressTime > 3000)) {
@@ -192,7 +180,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         });
 
 
-    } w
+    }
 
     RightClick() {
         this.scene.input.on('pointerdown', function (pointer) {
@@ -211,7 +199,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     playAnimation(animKey) {
 
         if (this.anims.currentAnim?.key !== animKey) {
-            console.log(animKey)
             this.anims.play(animKey, true);
         }
     }

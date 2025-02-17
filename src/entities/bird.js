@@ -12,7 +12,7 @@ class Bird extends Enemy {
         this.setSize(this.width - 20, this.height - 20);
         this.setOffset((this.width - (this.width - 20)) / 2, 20);
 
-        this.anims.play('bird-idle')
+        this.anims.play('Enemy-2-idle')
     }
 }
 

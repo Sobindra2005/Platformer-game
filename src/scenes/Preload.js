@@ -30,12 +30,19 @@ export class Preload extends Scene {
             this.load.image(`fireballImpact-${i}`, `/assets/weapons/improved_fireball_impact_00${i}.png`)
         }
 
-    
+
         this.load.spritesheet('throwAttack', '/assets/player/throw_attack_sheet_1.png', {
             frameWidth: 64,
             frameHeight: 38,
-           
+
         })
+
+        this.load.spritesheet('hit-effect', '/assets/weapons/hit_effect_sheet.png', {
+            frameWidth: 32,
+            frameHeight: 32,
+
+        })
+
 
         this.load.spritesheet('PlayerMovement', '/assets/player/move_sprite_1.png', {
             frameWidth: 32,
