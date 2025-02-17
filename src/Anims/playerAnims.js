@@ -30,7 +30,7 @@ export default anims => {
     anims.create({
         key: 'sword-attack',
         frames: anims.generateFrameNumbers('swordAttack', { start: 0, end: 6 }),
-        frameRate: 25,
+        frameRate: 37,
     })
 
     anims.create({

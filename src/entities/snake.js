@@ -1,4 +1,4 @@
-import snakeAnims from "../Anims/snakeAnims";
+
 import Enemy from "./Enemy";
 
 class Snake extends Enemy {

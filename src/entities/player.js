@@ -1,15 +1,13 @@
 import Phaser from "phaser";
 import collidable from "../mixins/collidable";
-import initAnims from '../Anims/playerAnims'
+
 import Projectiles from "../attacks/projectiles";
-import AttackAnims from "../Anims/AttackAnims";
-import Projectile from "../attacks/Projectile";
+
 
 class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture) {
         super(scene, x, y, texture);
-        initAnims(this.scene.anims)
-        AttackAnims(this.scene.anims)
+        this.leftClickListenerAdded = false;
         this.scene.add.existing(this)
         this.scene.physics.add.existing(this)
         this.init();
@@ -35,9 +33,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this)
     }
     update() {
-
         this.BodySizeManage();
+
         if (this.isEnemyColliding) {
+            this.TakeHit()
             return;
         }
         this.AnimationHandler();
@@ -62,8 +61,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     AnimationHandler() {
         this.EventListener();
-        this.RightClick();
         this.AnimationController();
+        this.leftClick();
     }
 
     projectile(texture) {
@@ -123,77 +122,76 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     AnimationController() {
         if (this.isThrowingBall) {
-            this.playAnimation('throwAttack')
+            this.playAnimation('throwAttack');
             this.once('animationcomplete', () => {
                 this.isThrowingBall = false;
-            })
-        }
-        else if (!this.body.onFloor()) {
-            if (this.isAttacking) {
-                this.playAnimation('sword-attack');
-                this.once('animationcomplete', () => {
-                    setTimeout(() => { this.isAttacking = false }, 400)
-
-                });
-            }
-            return this.playAnimation('jump');
-        }
-        else if (this.isSliding) {
+            });
+        } else if (this.isAttacking) {
+            this.playAnimation('sword-attack');
+        } else if (!this.body.onFloor()) {
+            this.playAnimation('jump');
+        } else if (this.isSliding) {
             this.setVelocityX(this.flipX ? -this.playerSpeed * 2 : this.playerSpeed * 2);
             this.playAnimation('slide');
             this.once('animationcomplete', () => {
-                setTimeout(() => { this.isSliding = false }, 400)
-
+                setTimeout(() => { this.isSliding = false }, 400);
             });
-        }
-        else if (this.body.velocity.x !== 0) {
-            if (this.isAttacking) {
-                return this.playAnimation('sword-attack');
-            }
-            return this.playAnimation('playerMovement');
-        }
-        else if (this.isAttacking) {
-            this.playAnimation('sword-attack');
-        }
-        else {
+        } else if (this.body.velocity.x !== 0) {
+            this.playAnimation('playerMovement');
+        } else {
             this.playAnimation('idle');
         }
     }
 
-    TakeHit() {
-        this.isEnemyColliding = true;
-        this.body.touching.right ?
-            this.setVelocityX(-this.isBounceVelocity)
-            :
-            this.setVelocityX(this.isBounceVelocity);
+    TakeHit(enemy) {
+        if (this.anims.currentAnim && (this.anims.currentAnim.key === 'sword-attack' || this.isAttacking)) {
+            if (!this.hasCollidedDuringAttack) {
+                enemy.meleeWeapon()
+                this.hasCollidedDuringAttack = true;
+            }
+        } else {
+            this.hasCollidedDuringAttack = false;
+        }
 
-        this.anims.play('landing', true)
+        //function whcih is needed when collided with the enemy Atttack .
 
-        this.scene.time.delayedCall(0, () => {
-            this.setVelocityY(-this.isBounceVelocity - 100)
-        });
 
-        this.scene.time.delayedCall(1000, () => {
-            this.isEnemyColliding = false;
-            this.setVelocity(0)
-            this.anims.stop()
-        });
+        // this.isEnemyColliding = true;
+        // this.body.touching.right ?
+        //     this.setVelocityX(-this.isBounceVelocity)
+        //     :
+        //     this.setVelocityX(this.isBounceVelocity);
+
+        // this.anims.play('landing', true)
+
+        // this.scene.time.delayedCall(0, () => {
+        //     this.setVelocityY(-this.isBounceVelocity - 100)
+        // });
+
+        // this.scene.time.delayedCall(1000, () => {
+        //     this.isEnemyColliding = false;
+        //     this.setVelocity(0)
+        //     this.anims.stop()
+        // });
 
 
     }
 
-    RightClick() {
-        this.scene.input.on('pointerdown', function (pointer) {
-            if (pointer.leftButtonDown()) {
-                this.isAttacking = true;
-            }
-        }, this);
+    leftClick() {
 
-        this.scene.input.on('pointerup', function (pointer) {
-            if (!pointer.leftButtonDown()) {
-                this.isAttacking = false;
-            }
-        }, this);
+        if (!this.leftClickListenerAdded) {
+            this.scene.input.on('pointerdown', function (pointer) {
+                if (pointer.leftButtonDown()) {
+                    this.isAttacking = true;
+                    this.playAnimation('sword-attack');
+                    this.once('animationcomplete', () => {
+                        this.isAttacking = false;
+                        this.playAnimation('idle');
+                    });
+                }
+            }, this);
+            this.leftClickListenerAdded = true;
+        }
     }
 
     playAnimation(animKey) {
@@ -202,6 +200,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.anims.play(animKey, true);
         }
     }
+
+    meeleAttack() {
+        console.log('attack bro attack')
+    }
+
 }
 
 export default Player;

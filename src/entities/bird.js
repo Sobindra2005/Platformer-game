@@ -1,4 +1,4 @@
-import BirdAnims from "../Anims/BirdAnims";
+
 import Enemy from "./Enemy";
 
 class Bird extends Enemy {

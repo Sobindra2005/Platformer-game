@@ -1,7 +1,5 @@
 import Phaser from "phaser";
 import collidable from "../mixins/collidable";
-import snakeAnims from "../Anims/snakeAnims";
-import BirdAnims from "../Anims/BirdAnims";
 
 class Enemy extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, texture) {
@@ -21,8 +19,6 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
             return;
         }
 
-        BirdAnims(this.scene.anims);
-        snakeAnims(this.scene.anims)
         this.body.setGravityY(1200);
         this.setCollideWorldBounds(true);
         this.setImmovable(true);
@@ -79,9 +75,26 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.platformColliderLayer = platformCollider
     }
 
+    meleeWeaponAttack() {
+        if (this.health <= 0) {
+            this.setVelocityY(-300)
+            this.setTint(0xff0000);
+            this.body.checkCollision.none = true;
+            this.setCollideWorldBounds(false);
+        }
+    }
+
     takesHit(source) {
-        this.health -= 20;
         source.deliversHit(this);
+        this.hurtEffect(20)
+    }
+
+    meleeWeapon() {
+        this.hurtEffect(30)
+    }
+
+    hurtEffect(damage) {
+        this.health -= damage;
         const currentEnemy = this.texture.key;
         this.anims.play(`${currentEnemy}-hurt`);
         this.once('animationcomplete', (animation) => {
@@ -93,13 +106,12 @@ class Enemy extends Phaser.Physics.Arcade.Sprite {
         )
         if (this.health <= 0) {
             this.setVelocityY(-300)
+            console.log('Velocity Y set to -300:', this.body.velocity.y);
             this.setTint(0xff0000);
             this.body.checkCollision.none = true;
             this.setCollideWorldBounds(false);
         }
     }
-
-
 }
 
 export default Enemy;

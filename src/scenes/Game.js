@@ -2,6 +2,11 @@ import { Scene } from 'phaser';
 import Player from '../entities/player';
 import Enemies from '../group/enemies';
 import hitanims from '../Anims/hitanims';
+import BirdAnims from '../Anims/BirdAnims';
+import snakeAnims from '../Anims/snakeAnims';
+import AttackAnims from '../Anims/AttackAnims';
+import initAnims from '../Anims/playerAnims'
+
 export class Game extends Scene {
     constructor(config) {
         super('Game');
@@ -14,8 +19,19 @@ export class Game extends Scene {
     }
 
     create() {
+        this.initAnimation();
         this.Environment();
         this.setupFollowupCameraOn();
+
+
+    }
+
+    initAnimation() {
+        BirdAnims(this.anims);
+        snakeAnims(this.anims)
+        initAnims(this.anims)
+        AttackAnims(this.anims)
+        AttackAnims(this.anims)
         hitanims(this.anims)
     }
 
@@ -94,8 +110,8 @@ export class Game extends Scene {
         return map;
     }
 
-    playerEnemyCollide() {
-        this.player.TakeHit()
+    playerEnemyCollide(entity, source) {
+        entity.TakeHit(source)
 
     }
 

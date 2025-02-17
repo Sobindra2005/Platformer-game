@@ -1,5 +1,4 @@
 import Phaser from "phaser"
-import AttackAnims from "../Anims/AttackAnims";
 import spriteEffects from "../effects/spriteeffects";
 
 class Projectile extends Phaser.Physics.Arcade.Sprite {
@@ -16,7 +15,7 @@ class Projectile extends Phaser.Physics.Arcade.Sprite {
   }
 
   init() {
-    AttackAnims(this.scene.anims)
+    
     this.setBodySize(15, 10)
     this.setOffset(this.width / 2 - 7.5, this.height / 2 - 5)
 
