@@ -33,9 +33,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this)
     }
     update() {
+      
         this.BodySizeManage();
-
-
 
         if (this.isEnemyColliding) {
             this.TakeHit()

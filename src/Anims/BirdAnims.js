@@ -8,8 +8,8 @@ export default BirdAnims => {
     BirdAnims.create({
         key: 'Enemy-1-attack',
         frames: BirdAnims.generateFrameNumbers('Enemy-1-attack', { start: 13, end: 19 }),
-        frameRate: 15,
-        repeat: -1 ,
+        frameRate: 13,
+    
     })
 
     BirdAnims.create({

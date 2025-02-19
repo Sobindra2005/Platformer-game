@@ -9,7 +9,6 @@ export default SnakeAnims => {
         key: 'Enemy-2-attack',
         frames: SnakeAnims.generateFrameNumbers('Enemy-2-attack', { start: 9, end: 18 }),
         frameRate: 15,
-        repeat: -1 ,
     })
 
     SnakeAnims.create({

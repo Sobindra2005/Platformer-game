@@ -8,7 +8,7 @@ class Bird extends Enemy {
 
     initBird() {
         this.anims.play('Enemy-1');
-        this.setBodySize(this.body.width  - 5, this.body.height-20).setOffset(2.5, 20);
+        
     }
 
    

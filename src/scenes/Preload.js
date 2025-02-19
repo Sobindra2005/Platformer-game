@@ -83,6 +83,7 @@ export class Preload extends Scene {
         this.load.spritesheet('Enemy-1-attack', '/assets/enemy/enemy_sheet.png', {
             frameWidth: 64,
             frameHeight: 64,
+   
         })
 
     }

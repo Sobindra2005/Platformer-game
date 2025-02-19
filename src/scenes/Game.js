@@ -33,12 +33,10 @@ export class Game extends Scene {
         hitanims(this.anims)
     }
 
-    update() {
-           
-    }
+   
 
     Player(start) {
-        this.player = new Player(this, start.x, start.y, 'PlayerMovement').setOrigin(0.5 , 0.5).refreshBody();
+        this.player = new Player(this, start.x, start.y, 'PlayerMovement').setOrigin(0.5, 0.5).refreshBody();
     }
 
 
@@ -55,7 +53,7 @@ export class Game extends Scene {
         this.SpawnRandomEnemy(EnemySpawnZone, Layer.platformLayer)
 
         this.Player(this.playerZone.start);
-        
+
         this.PlayerCollider(this.player, {
             CollisionObjects: {
                 platform: Layer.platformCollider
@@ -98,7 +96,8 @@ export class Game extends Scene {
 
         if (CollisionObjects.player && CollisionObjects.player.projectiles) {
 
-            player.addCollider(CollisionObjects.player.projectiles, this.onWeaponHit);
+            player.addCollider(CollisionObjects.player.projectiles,this.onWeaponHit);
+            this.physics.add.overlap(player, CollisionObjects.player.projectiles, this.onWeaponHit)
         }
     }
 
@@ -111,7 +110,6 @@ export class Game extends Scene {
 
     playerEnemyCollide(entity, source) {
         entity.TakeHit(source)
-        source.MeeleWeaponAttack();
     }
 
     CreateLayer(map) {
