@@ -11,11 +11,12 @@ class Projectile extends Phaser.Physics.Arcade.Sprite {
     this.travelledDistance = 0;
     this.MaxDistance = 600;
     this.damage = 20;
+    this.Istexture = null;
 
   }
 
   init() {
-    
+
     this.setBodySize(15, 10)
     this.setOffset(this.width / 2 - 7.5, this.height / 2 - 5)
 
@@ -43,16 +44,17 @@ class Projectile extends Phaser.Physics.Arcade.Sprite {
     this.activateProjectile(true)
     this.setDirection(velocity)
     player.flipX ? this.setFlipX(true) : this.setFlipX(false)
+    this.Istexture = texture
     this.anims.play(texture);
     this.setVelocityX(this.velocity)
   }
 
   deliversHit(target) {
-    const impactPosition= {x:this.x , y:this.y }
+    const impactPosition = { x: this.x, y: this.y }
     this.activateProjectile(false)
     this.travelledDistance = 0;
     this.body.reset(0, 0);
-    new spriteEffects(this.scene, 0, 0, 'hit-effect',impactPosition).playOn(target)
+    new spriteEffects(this.scene, 0, 0, 'hit-effect', impactPosition).playOn(target)
   }
 
   activateProjectile(isActive) {

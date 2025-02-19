@@ -11,9 +11,11 @@ export default {
     raycast(body, layer, raylength = 36, precision) {
         const { x, y, width, halfHeight } = body;
 
-        this.bodyPositionDifferenceX += body.x - body.prev.x;
+        this.bodyPositionDifferenceX += body.deltaX();
 
         if ((Math.abs(this.bodyPositionDifferenceX) <= precision) && this.prevHasHit !== null) {
+
+            this.bodyPositionDifferenceX = 0;
             return {
                 ray: this.prevRay,
                 hasHit: this.prevHasHit
@@ -27,14 +29,14 @@ export default {
             case Phaser.Physics.Arcade.FACING_RIGHT: {
                 line.x1 = x + width;
                 line.y1 = y + halfHeight;
-                line.x2 = line.x1 + raylength -15;
+                line.x2 = line.x1 + raylength - 15;
                 line.y2 = line.y1 + raylength;
                 break;
             }
             case Phaser.Physics.Arcade.FACING_LEFT: {
                 line.x1 = x;
                 line.y1 = y + halfHeight;
-                line.x2 = line.x1 - raylength ;
+                line.x2 = line.x1 - raylength;
                 line.y2 = line.y1 + raylength;
                 break;
             }
@@ -43,7 +45,7 @@ export default {
         const hits = layer.getTilesWithinShape(line);
         if (hits.length > 0) {
             hasHit = hits.some(hit => hit.index !== -1)
-           
+
         }
 
         this.bodyPositionDifferenceX = 0;

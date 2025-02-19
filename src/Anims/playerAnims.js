@@ -36,7 +36,7 @@ export default anims => {
     anims.create({
         key: 'slide',
         frames: anims.generateFrameNumbers('slideSheet', { start: 0, end: 2 }),
-        frameRate: 12,
+        frameRate: 13,
     })
 
 }

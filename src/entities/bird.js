@@ -1,19 +1,17 @@
-
 import Enemy from "./Enemy";
 
 class Bird extends Enemy {
     constructor(scene, x, y) {
-        super(scene, x, y, 'Enemy-1')
+        super(scene, x, y, 'Enemy-1');
         this.initBird();
-
     }
 
     initBird() {
-        this.setSize(this.width - 20, this.height - 20);
-        this.setOffset((this.width - (this.width - 20)) / 2, 20);
-
-        this.anims.play('Enemy-2-idle')
+        this.anims.play('Enemy-1');
+        this.setBodySize(this.body.width  - 5, this.body.height-20).setOffset(2.5, 20);
     }
+
+   
 }
 
 export default Bird;

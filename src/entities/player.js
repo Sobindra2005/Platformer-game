@@ -35,6 +35,8 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     update() {
         this.BodySizeManage();
 
+
+
         if (this.isEnemyColliding) {
             this.TakeHit()
             return;
@@ -45,16 +47,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     BodySizeManage() {
         if (this.isSliding) {
             if (this.flipX) {
-                this.setBodySize(42, 20)
+                this.setBodySize(42, 40)
                 this.setOffset(20, 20)
             }
             else {
-                this.setBodySize(42, 20)
+                this.setBodySize(30, 20)
                 this.setOffset(0, 20)
             }
         }
         else {
-            this.setBodySize(20, 47)
+            this.setBodySize(this.width -12 , this.heigth-14)
         }
     }
 
@@ -93,7 +95,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.projectile('snowball')
         }
 
-        if (shift.isDown && this.body.onFloor() && (currentTime - this.lastShiftPressTime > 3000)) {
+        if (shift.isDown && this.body.onFloor()) {
             this.isSliding = true;
             this.lastShiftPressTime = currentTime;
         }
@@ -131,7 +133,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         } else if (!this.body.onFloor()) {
             this.playAnimation('jump');
         } else if (this.isSliding) {
-            this.setVelocityX(this.flipX ? -this.playerSpeed * 2 : this.playerSpeed * 2);
+            this.setVelocityX(this.flipX ? -this.playerSpeed * 0.4 : this.playerSpeed * 0.4);
             this.playAnimation('slide');
             this.once('animationcomplete', () => {
                 setTimeout(() => { this.isSliding = false }, 400);
@@ -200,11 +202,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.anims.play(animKey, true);
         }
     }
-
-    meeleAttack() {
-        console.log('attack bro attack')
-    }
-
 }
 
 export default Player;
