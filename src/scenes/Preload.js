@@ -29,6 +29,12 @@ export class Preload extends Scene {
             this.load.image(`fireballImpact-${i}`, `/assets/weapons/improved_fireball_impact_00${i}.png`)
         }
 
+        this.load.audio('jumpSound', '/assets/music/jump.wav')
+        this.load.audio('backgroundMusic', '/assets/music/theme_music.wav')
+        this.load.audio('attack', '/assets/music/projectile_launch.wav')
+        this.load.audio('hit', '/assets/music/Retro Impact Punch 07.wav') 
+        this.load.audio('swordSound', '/assets/music/swipe.wav')
+        this.load.audio('move', '/assets/music/step_mud.wav')
 
         this.load.spritesheet('throwAttack', '/assets/player/throw_attack_sheet_1.png', {
             frameWidth: 32,
